@@ -962,7 +962,46 @@
     <div class="footer-tagline">Light, Shadow &amp; Story.</div>
   </footer>
 
-  
+  <script>
+    // Cursor
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let rx = 0, ry = 0, dx = 0, dy = 0;
+    document.addEventListener('mousemove', e => {
+      dx = e.clientX; dy = e.clientY;
+      dot.style.left = dx + 'px'; dot.style.top = dy + 'px';
+    });
+    (function animateRing() {
+      rx += (dx - rx) * 0.12; ry += (dy - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+    document.querySelectorAll('a, button, .service-row, .testimonial-card, .about-feature').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Form
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.btn-submit span');
+      btn.textContent = 'Message Sent ✓';
+      btn.parentElement.style.background = '#c9a96e';
+      setTimeout(() => { btn.textContent = 'Send Inquiry →'; btn.parentElement.style.background = ''; }, 3000);
+    }
+  </script>
+</body>
+</html>
 </body>
 </html>     
    
