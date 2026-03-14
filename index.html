@@ -302,7 +302,7 @@
             <span class="contact-icon">✉️</span>
             <div class="contact-text">
               <strong>Email</strong>
-              <a href="mailto:avlensmarkating96@gmail.com">avlensmarkating96@gmail.com</a>
+              <a href="/cdn-cgi/l/email-protection#ec8d9a8089829f818d9e878d9885828bd5daac8b818d8580c28f8381"><span class="__cf_email__" data-cfemail="99f8eff5fcf7eaf4f8ebf2f8edf0f7fea0afd9fef4f8f0f5b7faf6f4">[email&#160;protected]</span></a>
             </div>
           </div>
           <div class="contact-row">
@@ -335,7 +335,7 @@
         ╚══════════════════════════════════════════════════════════╝
         -->
         <form class="contact-form" id="contactForm"
-              action="https://formspree.io/f/YOUR_FORMSPREE_ID"
+              action="https://formspree.io/f/xqeylwdg"
               method="POST">
 
           <input type="hidden" name="_replyto"  value="avlensmarkating96@gmail.com"/>
@@ -371,7 +371,7 @@
             <label for="fmsg">Message *</label>
             <textarea id="fmsg" name="message" placeholder="Tell me about your project, date, location…" required></textarea>
           </div>
-          <p class="form-note">📩 Message goes directly to avlensmarkating96@gmail.com</p>
+          <p class="form-note">📩 Message goes directly to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b8d9ced4ddd6cbd5d9cad3d9ccd1d6df818ef8dfd5d9d1d496dbd7d5">[email&#160;protected]</a></p>
           <button type="submit" class="form-submit" id="submitBtn">Send Message →</button>
           <div class="form-success" id="formSuccess">✅ Message sent successfully! I'll reply soon.</div>
         </form>
@@ -387,7 +387,7 @@
     <div class="footer-socials">
       <a href="https://www.instagram.com/avlensbydc/" target="_blank" rel="noopener">Instagram</a>
       <a href="https://www.facebook.com/profile.php?id=61582251937096" target="_blank" rel="noopener">Facebook</a>
-      <a href="mailto:avlensmarkating96@gmail.com">Email</a>
+      <a href="/cdn-cgi/l/email-protection#14756278717a677975667f75607d7a732d22547379757d783a777b79">Email</a>
     </div>
   </footer>
 
@@ -414,31 +414,64 @@
     heroSec.addEventListener('mousemove',e=>{
       const r=heroSec.getBoundingClientRect();
       const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-      heroTitle.style.transform=`perspective(800px) rotateY(${x*10}deg) rotateX(${-y*6}deg)`;
+      heroTitle.style.transform='perspective(800px) rotateY('+(x*10)+'deg) rotateX('+(-y*6)+'deg)';
     });
     heroSec.addEventListener('mouseleave',()=>heroTitle.style.transform='');
 
-    // FORM AJAX SUBMIT via Formspree
+    // FORM — mailto fallback (works without any backend setup)
     const form=document.getElementById('contactForm');
     const btn=document.getElementById('submitBtn');
     const successMsg=document.getElementById('formSuccess');
-    form.addEventListener('submit',async function(e){
+
+    function sendViaMail(){
+      var name    = document.getElementById('fname').value.trim();
+      var email   = document.getElementById('femail').value.trim();
+      var phone   = document.getElementById('fphone').value.trim();
+      var service = document.getElementById('fservice').value;
+      var msg     = document.getElementById('fmsg').value.trim();
+      var body    = "Name: " + name + "\n" +
+                    "Email: " + email + "\n" +
+                    "Phone: " + (phone||'Not provided') + "\n" +
+                    "Service: " + service + "\n\nMessage:\n" + msg;
+      var subject = "New Enquiry — AVLensByDC Website";
+      window.location.href = "mailto:avlensmarkating96@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      setTimeout(function(){
+        form.reset();
+        successMsg.style.display='block';
+        successMsg.innerHTML='\u2705 Your email app has opened with the message ready — just press <strong>Send</strong>!';
+        btn.textContent='\u2705 Done!';
+      }, 500);
+    }
+
+    form.addEventListener('submit', async function(e){
       e.preventDefault();
-      btn.textContent='Sending…';
+      var formAction = form.getAttribute('action');
+      var isFormspreeReady = formAction && !formAction.includes('YOUR_FORMSPREE_ID');
+
+      btn.textContent='Sending\u2026';
       btn.disabled=true;
+
+      if(!isFormspreeReady){
+        sendViaMail();
+        return;
+      }
+
       try{
-        const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}});
+        var res = await fetch(formAction, {
+          method:'POST',
+          body: new FormData(form),
+          headers:{'Accept':'application/json'}
+        });
         if(res.ok){
           form.reset();
           successMsg.style.display='block';
-          btn.textContent='✅ Sent!';
+          successMsg.textContent='\u2705 Message sent! I will reply soon.';
+          btn.textContent='\u2705 Sent!';
         } else {
-          btn.textContent='❌ Failed — email me directly';
-          btn.disabled=false;
+          sendViaMail();
         }
       } catch(err){
-        btn.textContent='❌ Network error';
-        btn.disabled=false;
+        sendViaMail();
       }
     });
   </script>
