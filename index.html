@@ -324,16 +324,7 @@
 
       <!-- Form powered by Formspree -->
       <div class="reveal">
-        <!--
-        ╔══════════════════════════════════════════════════════════╗
-        ║         ACTIVATE FORM — ONE-TIME SETUP (2 min)          ║
-        ║  1. Go to https://formspree.io  →  Sign up FREE          ║
-        ║  2. Click "New Form", name it "AVLensByDC Contact"       ║
-        ║  3. Set email to: avlensmarkating96@gmail.com            ║
-        ║  4. Copy your Form ID  (e.g. xrgvwkpz)                  ║
-        ║  5. Replace  YOUR_FORMSPREE_ID  below with that ID       ║
-        ╚══════════════════════════════════════════════════════════╝
-        -->
+        <!-- Form connected to Formspree → avlensmarkating96@gmail.com -->
         <form class="contact-form" id="contactForm"
               action="https://formspree.io/f/xqeylwdg"
               method="POST">
@@ -446,7 +437,7 @@
     form.addEventListener('submit', async function(e){
       e.preventDefault();
       var formAction = form.getAttribute('action');
-      var isFormspreeReady = formAction && !formAction.includes('YOUR_FORMSPREE_ID');
+      var isFormspreeReady = true; // Formspree connected: xqeylwdg
 
       btn.textContent='Sending\u2026';
       btn.disabled=true;
